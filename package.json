@@ -1,0 +1,25 @@
+{
+  "name": "ektt",
+  "version": "1.0.0",
+  "description": "EasyKash Technical Test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mosafa697/EKTT.git"
+  },
+  "author": "mostafa magdy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mosafa697/EKTT/issues"
+  },
+  "homepage": "https://github.com/mosafa697/EKTT#readme",
+  "dependencies": {
+    "sequelize": "^6.19.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.4.1"
+  }
+}
