@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/mosafa697/EKTT#readme",
   "dependencies": {
+    "express": "^4.17.3",
+    "fs": "^0.0.1-security",
+    "mysql2": "^2.3.3",
+    "path": "^0.12.7",
     "sequelize": "^6.19.0"
   },
   "devDependencies": {
