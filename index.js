@@ -1,28 +1,53 @@
 const express = require("express");
-const app = express();
-const { Sequelize } = require('sequelize');
+const groupByTime = require("group-by-time");
+const { sequelize, Seller, Transaction } = require('./models');
 
-// Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('ekttDB', 'root', '123456789', {
-  host: 'localhost',
-  dialect: "mysql"
+
+const app = express();
+app.use(express.json());
+
+app.get('/transactions', async(req, res) => {
+  try {
+    let page = req.query.page;
+    let per_page = req.query.per_page; //size
+    let seller_id = req.query.seller_id;
+    let date_range = req.query.date_range;
+
+    let transaction = Transaction;
+    const transactions = await transaction.findAll({where: {seller_id: seller_id}});
+    //pagination
+    return res.json(transactions)
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({error: 'something went wrong'});
+  }
 });
 
-try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+app.get('/sellers/transactions-summary', async(req, res) => {
+  try {
+    let seller_id = req.query.seller_id;
+    let date_range = req.query.date_range;
+
+    let sellers = Seller;
+    let transaction = Transaction;
+
+    const sellerdata = await sellers.findAll({where: {id: seller_id}});
+    const sellerTransactions = await transaction.findAll({where: {id: seller_id}});
+
+    // calculate sellers income
+
+    return res.json(sellerdata)
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.log(error);
+    return res.status(500).json({error: 'something went wrong'});
   }
+})
 
-// const seller = require('./models/Seller');
 
-// app.listen(3000, () => {
-//     console.log("hola");
-// });
-
-// sequlize.sync().then((result) => {
-//     console.log(result);
-// }).catch((err) => {
-//     console.log(err);
-// });
+app.listen({port: 5000}, async () => {
+  console.log("server up on port 5000");
+  // await sequelize.sync();
+  await sequelize.authenticate()
+  //sequelize db:migrate
+  console.log("Database is connected");
+});
