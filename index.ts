@@ -1,6 +1,8 @@
-const express = require("express");
-const groupByTime = require("group-by-time");
-const { sequelize, Seller, Transaction } = require('./models');
+import express from 'express';
+// import groupByTime from 'group-by-time';
+import { sequelize } from './models/index';
+import { Seller } from './models/seller';
+import { Transaction } from './models/transaction';
 
 
 const app = express();
@@ -14,8 +16,8 @@ app.get('/transactions', async(req, res) => {
     let date_range = req.query.date_range;
 
     let transaction = Transaction;
-    const transactions = await transaction.findAll({where: {seller_id: seller_id}});
-    //pagination
+    const transactions = await transaction.findAll({where: {seller_id: seller_id}, limit: per_page, offset: date_range});
+
     return res.json(transactions)
   } catch (error) {
     console.log(error);
