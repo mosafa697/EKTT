@@ -1,9 +1,9 @@
-import express from 'express';
-// import groupByTime from 'group-by-time';
-import { sequelize } from './models/index';
-import { Seller } from './models/seller';
-import { Transaction } from './models/transaction';
-
+import express from 'express'; 
+import { QueryTypes } from 'sequelize';
+// import { sequelize } from './models';
+// import { Seller } from './models/seller';
+// import { Transaction } from './models/transaction';
+const {Transaction, Seller, sequelize} = require ('./models');
 
 const app = express();
 app.use(express.json());
@@ -11,12 +11,18 @@ app.use(express.json());
 app.get('/transactions', async(req, res) => {
   try {
     let page = req.query.page;
-    let per_page = req.query.per_page; //size
+    let per_page = req.query.per_page;
     let seller_id = req.query.seller_id;
     let date_range = req.query.date_range;
 
     let transaction = Transaction;
-    const transactions = await transaction.findAll({where: {seller_id: seller_id}, limit: per_page, offset: date_range});
+    const transactions = await transaction.findAndCountAll({
+      where: {
+        seller_id: seller_id
+        },
+        offset: Number(page) * Number(per_page),
+        limit: per_page
+      });
 
     return res.json(transactions)
   } catch (error) {
@@ -30,15 +36,16 @@ app.get('/sellers/transactions-summary', async(req, res) => {
     let seller_id = req.query.seller_id;
     let date_range = req.query.date_range;
 
-    let sellers = Seller;
-    let transaction = Transaction;
+    let seller = Seller
+    const sellerdata = await seller.findOne({ where: { id: seller_id } });
+    const sellertotalprices = await sequelize
+    .query("select CAST(lastupdated AS DATE) as Date, sum(price) from transaction where seller_id = ? group by CAST(lastupdated AS DATE) LIMIT ?"
+      ,{ 
+        replacements: [seller_id, Number(date_range)],
+        type: QueryTypes.SELECT
+      });
 
-    const sellerdata = await sellers.findAll({where: {id: seller_id}});
-    const sellerTransactions = await transaction.findAll({where: {id: seller_id}});
-
-    // calculate sellers income
-
-    return res.json(sellerdata)
+    return res.json({sellerdata, sellertotalprices})
   } catch (error) {
     console.log(error);
     return res.status(500).json({error: 'something went wrong'});
