@@ -12,5 +12,8 @@ npm install
 # run projects
 npm start
 ```
-#Note
-This project must be run before EKTTfront
+# Note
+This project must be run before EKTTfront project 
+
+# To install EKTTfront 
+https://github.com/mosafa697/EKTTfront
