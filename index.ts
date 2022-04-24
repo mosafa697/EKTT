@@ -1,9 +1,8 @@
-import express from 'express'; 
+import express from 'express';
 import { QueryTypes } from 'sequelize';
-// import { sequelize } from './models';
-// import { Seller } from './models/seller';
-// import { Transaction } from './models/transaction';
-const {Transaction, Seller, sequelize} = require ('./models');
+import { sequelize } from './models';
+import  { Seller } from './models/seller';
+import  { Transaction }  from "./models/transaction";
 
 const app = express();
 app.use(express.json());
@@ -55,8 +54,11 @@ app.get('/sellers/transactions-summary', async(req, res) => {
 
 app.listen({port: 5000}, async () => {
   console.log("server up on port 5000");
-  // await sequelize.sync();
-  await sequelize.authenticate()
-  //sequelize db:migrate
+  //first time only to sync the DB
+  // await sequelize.sync();   
+  //The normal use to connect DB
+    await sequelize.authenticate();
+  //to inform migration
+  //await sequelize db:migrate
   console.log("Database is connected");
 });

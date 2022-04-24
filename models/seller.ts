@@ -1,15 +1,9 @@
-'use strict';
-import {Model} from 'sequelize';
-module.exports = (sequelize: any, DataTypes: any) => {
+import {Model , DataTypes} from 'sequelize';
+import  {sequelize} from './index'
   class Seller extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models: any) {
-      // define association here
-    }
+    public id !: number;
+    public  name !: string;
+    public  income !:number;
   }
   Seller.init({
     id: {
@@ -39,5 +33,5 @@ module.exports = (sequelize: any, DataTypes: any) => {
     tableName: 'Seller',
     modelName: 'Seller',
   });
-  return Seller;
-};
+
+export  {Seller};
